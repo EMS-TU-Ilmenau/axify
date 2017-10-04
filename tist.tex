@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+\begin{axis}[
+    enlargelimits = false,
+    axis on top = true,
+    axis equal image,
+    point meta min = -3.297460,
+    point meta max = 3.192551,
+    colorbar horizontal,
+    colormap/jet
+    ]
+    \addplot graphics [
+        xmin = 0,
+        xmax = 32,
+        ymin = 0,
+        ymax = 64
+    ] {tist};
+\end{axis}
+\end{tikzpicture}
