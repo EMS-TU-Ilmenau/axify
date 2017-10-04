@@ -13,7 +13,8 @@ to be included in a TeX document."""
 parser.add_argument(
     '-p',
     action="store",
-    help='path to the *.npy file without the file extension',
+    help='path to the *.npy file(s) without the file extension',
+    nargs='+',
     type=str
     )
 
@@ -22,6 +23,14 @@ parser.add_argument(
     action="store",
     help='colormap for the plot; must be present in matplotlib and pgfplots',
     default="jet",
+    type=str
+    )
+
+parser.add_argument(
+    '-t',
+    action="store",
+    help='tikz template to use; possible choices: simple,...',
+    default="simple",
     type=str
     )
 
@@ -47,10 +56,24 @@ simple = r"""\begin{tikzpicture}
 \end{tikzpicture}
 """
 
-def main(metaMin, metaMax, size, colorMap, path):
+themes = {
+    'simple': simple
+}
+
+def compose(
+    theme,          # the theme to use in TeX code
+    metaMin,        # minimum value in data
+    metaMax,        # maximum value in data
+    size,           # tuple of dimensions; attention it is swapped!
+    colorMap,       # the colormap of the plot and colorbar
+    path            # path to work on
+    ):
+    
+    # open the file
     f = open(path + '.tex', 'w')
     
-    f.write(simple % (
+    # write the tikz-snippet
+    f.write(themes[theme] % (
             metaMin,
             metaMax,
             colorMap,
@@ -58,32 +81,37 @@ def main(metaMin, metaMax, size, colorMap, path):
             path
         ))
     
+    # clean everything up
     f.close()
 
 if __name__ == "__main__":
+    
     # parse arguments
-    imgPath = args.p
+    lstPaths = args.p
     colorMap = args.m
+    theme = args.t
     
-    
-    if os.path.isfile(imgPath + '.npy'):
-        data = np.load(imgPath + '.npy')
-        
-        # plot image without boundaries and save it to pdf
-        ax = subplot(111)
-        img = ax.imshow(data, interpolation='nearest')
-        img.set_cmap(colorMap)
-        imsave(
-            fname = imgPath + '.pdf', 
-            arr = data,
-            cmap = colorMap
-        )
-        
-        size = (data.shape[1], data.shape[0])
-        metaMin = np.min(data)
-        metaMax = np.max(data)
-        
-        # call the main function
-        main(metaMin, metaMax, size, colorMap, imgPath)
-    else:
-        raise(StandardError)
+    for imgPath in lstPaths:
+        if os.path.isfile(imgPath + '.npy'):
+            
+            # load the numpy array
+            data = np.load(imgPath + '.npy')
+            
+            # plot image without boundaries and save it to pdf
+            ax = subplot(111)
+            img = ax.imshow(data, interpolation='nearest')
+            img.set_cmap(colorMap)
+            imsave(
+                fname = imgPath + '.pdf', 
+                arr = data,
+                cmap = colorMap
+            )
+            
+            size = (data.shape[1], data.shape[0])
+            metaMin = np.min(data)
+            metaMax = np.max(data)
+            
+            # call the composition function
+            compose(theme, metaMin, metaMax, size, colorMap, imgPath)
+        else:
+            raise(StandardError)
