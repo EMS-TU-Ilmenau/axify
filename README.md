@@ -12,11 +12,19 @@ This approach yields the following goodies:
     1. We are able to generate large annotated heat plots at all!
     2. We save compilation time of the global TeX document, since the heatplots 
        themselves are "cached".
+    3. The generated *.tex files are very selfcontained and can be placed 
+       anywhere in your document without restrictions
 
 ## Usage
-
-It is very easy. Invoking `python axify -h` tells you what to do. The provided 
-example can be procssed by calling 
+In you main document you should make sure that you satisfy all dependencies by 
+adding
+```
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepgfplotslibrary{colormaps}
+```
+in your preamble. The rest is very easy. Invoking `python axify -h` tells you 
+what to do. The provided example can be procssed by calling 
 
 `python axify -p test tist -m jet -t simple && pdflatex main`
 
