@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+\begin{axis}[
+    enlargelimits = false,
+    axis on top = true,
+    axis equal image,
+    point meta min = %(dataMin)f,
+    point meta max = %(dataMax)f,
+    colorbar horizontal,
+    %(colormap)s,
+    ]
+    \addplot graphics [
+        xmin = %(xMin)f,
+        xmax = %(xMax)f,
+        ymin = %(yMin)f,
+        ymax = %(yMax)f
+    ] {%(imagePath)s};
+\end{axis}
+\end{tikzpicture}
