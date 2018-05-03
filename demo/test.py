@@ -1,4 +1,3 @@
-
 import axify as ax
 import numpy as np
 # create some random data
@@ -8,6 +7,6 @@ data[:,2] = np.random.randn(1024)
 # load an axify theme
 thme = ax.Theme('simple.tex')
 # construct a colormap
-cmap = ax.Colormap('hot')
+cmap = ax.ColorMap('hot')
 # write the png and the tex file
 ax.toHeatmap(data, 'data', thme, cmap)
