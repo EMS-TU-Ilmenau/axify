@@ -248,7 +248,7 @@ def toHeatmap(
 
     try:
         # plot image without boundaries and save it to png
-        imsave(
+        plt.imsave(
             fname=imgPath + '.png',
             arr=arrData,
             cmap=colorMap.obj
