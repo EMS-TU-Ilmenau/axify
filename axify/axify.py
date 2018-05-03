@@ -222,7 +222,7 @@ def toHeatmap(
     >>> # load an axify theme
     >>> thme = ax.Theme('simple.tex')
     >>> # construct a colormap
-    >>> cmap = ax.Colormap('hot')
+    >>> cmap = ax.ColorMap('hot')
     >>> # write the png and the tex file
     >>> ax.toHeatmap(data, 'data', thme, cmap)
     """
