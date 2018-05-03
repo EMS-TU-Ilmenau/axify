@@ -283,7 +283,7 @@ def toScatter(
         path to save image and text file to, no file-ending
     theme : Theme
         teX theme to be used
-    colorMap : Colormap
+    colorMap : ColorMap
         colormap to be used
     xLim=[] : list
         range if the x axis
@@ -308,7 +308,7 @@ def toScatter(
     >>> # load an axify theme
     >>> thme = ax.Theme('simple.tex')
     >>> # construct a colormap
-    >>> cmap = ax.Colormap('hot')
+    >>> cmap = ax.ColorMap('hot')
     >>> # write the png and the tex file
     >>> ax.toHeatmap(data, 'data', thme, cmap)
     """
