@@ -81,6 +81,11 @@ Usage:
     * yLabel
     * imagePath – path to the rendered png
     * colormap – defining text of the colormap
+    * any self defined variables, which have to be filled by adding
+      themeArgs to the call for the scatter or heatmap plots
+
+  So, one can supply via the variable themeArgs a dictionary,
+  which then also can parametrize the theme further.
 
   Moreover, there is colorfy support, which allows to import colormaps that
   follow a certain scheme. So let's assume, we have a file colors.json

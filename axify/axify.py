@@ -188,10 +188,12 @@ def toHeatmap(
     colorMap,
     xLim=[],
     yLim=[],
+    zLim=[],
     xLabel='x',
     yLabel='y',
+    themeArgs={},
 ):
-    r"""
+    """
     Create a heatmap plot from 2D data.
 
     Parameters
@@ -208,6 +210,8 @@ def toHeatmap(
         range if the x axis
     yLim=[] : list
         range of the y axis
+    zLim=[] : list
+        range of the data values
     xLabel='x' : string
         label on the x axis
     yLabel='y' : string
@@ -233,9 +237,12 @@ def toHeatmap(
     if yLim == []:
         yLim = [0, arrData.shape[0]]
 
+    if zLim == []:
+        zLim = [np.min(arrData), np.max(arrData)]
+
     dctPlotInfo = {
-        'dataMin': np.min(arrData),
-        'dataMax': np.max(arrData),
+        'dataMin': zLim[0],
+        'dataMax': zLim[1],
         'xMin': xLim[0],
         'xMax': xLim[1],
         'xLabel': xLabel,
@@ -245,6 +252,8 @@ def toHeatmap(
         'imagePath': imgPath,
         'colormap': colorMap.toPGF()
     }
+
+    dctPlotInfo.update(themeArgs)
 
     try:
         # plot image without boundaries and save it to png
@@ -267,8 +276,10 @@ def toScatter(
     colorMap,
     xLim=[],
     yLim=[],
+    zLim=[],
     xLabel='x',
     yLabel='y',
+    themeArgs={}
 ):
     r"""
     Create a scatter plot from a Nx3 ndarray, where the first two
@@ -289,6 +300,8 @@ def toScatter(
         range if the x axis
     yLim=[] : list
         range of the y axis
+    zLim=[] : list
+        range of the data values
     xLabel='x' : string
         label on the x axis
     yLabel='y' : string
@@ -319,6 +332,9 @@ def toScatter(
     if yLim == []:
         yLim = [np.min(arrData[:, 1]), np.max(arrData[:, 1])]
 
+    if zLim == []:
+        zLim = [np.min(arrData), np.max(arrData)]
+
     dctPlotInfo = {
         'dataMin': np.min(arrData[:, 2]),
         'dataMax': np.max(arrData[:, 2]),
@@ -341,6 +357,8 @@ def toScatter(
         cmap=colorMap.obj,
         linewidths=5
     )
+
+    dctPlotInfo.update(themeArgs)
 
     fig = plt.gcf()
     fig.patch.set_alpha(0)
