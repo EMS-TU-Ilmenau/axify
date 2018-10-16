@@ -255,13 +255,19 @@ def toHeatmap(
 
     dctPlotInfo.update(themeArgs)
 
+    mat = arrData - zLim[0]
+    mat /= (zLim[1] - zLim[0])
+
     try:
         # plot image without boundaries and save it to png
         plt.imsave(
             fname=imgPath + '.png',
-            arr=arrData,
-            cmap=colorMap.obj
+            arr=255*mat,
+            cmap=colorMap.obj,
+            vmin = 0,
+            vmax = 255
         )
+        print(zLim)
     except IOError:
         print("Could not write to file " + imgPath)
     else:
