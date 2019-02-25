@@ -170,9 +170,9 @@ def _compose(
 
     try:
         # open the file
-        f = open(dctPlotInfo['imagePath'] + '.tex', 'w')
+        f = open(dctPlotInfo['savePath'] + '.tex', 'w')
     except IOError:
-        print("Could not write to file " + dctPlotInfo['imagePath'])
+        print("Could not write to TeX file %s" + dctPlotInfo['savePath'])
     else:
         # write the tikz-snippet
         f.write(theme.string % (dctPlotInfo))
@@ -186,6 +186,7 @@ def toHeatmap(
     imgPath,
     theme,
     colorMap,
+    texPath=None,
     xLim=[],
     yLim=[],
     zLim=[],
@@ -206,6 +207,9 @@ def toHeatmap(
         teX theme to be used
     colorMap : Colormap
         colormap to be used
+    texPath=None : string
+        path to the imagefile where TeX will be able to find it.
+        if left at None, texPath=imgPath is assumed
     xLim=[] : list
         range if the x axis
     yLim=[] : list
@@ -240,6 +244,9 @@ def toHeatmap(
     if zLim == []:
         zLim = [np.min(arrData), np.max(arrData)]
 
+    if texPath is None:
+        texPath = imgPath
+
     dctPlotInfo = {
         'dataMin': zLim[0],
         'dataMax': zLim[1],
@@ -249,7 +256,8 @@ def toHeatmap(
         'yMin': yLim[0],
         'yMax': yLim[1],
         'yLabel': yLabel,
-        'imagePath': imgPath,
+        'savePath': imgPath,
+        'imagePath': texPath,
         'colormap': colorMap.toPGF()
     }
 
@@ -264,12 +272,11 @@ def toHeatmap(
             fname=imgPath + '.png',
             arr=255*mat,
             cmap=colorMap.obj,
-            vmin = 0,
-            vmax = 255
+            vmin=0,
+            vmax=255
         )
-        print(zLim)
-    except IOError:
-        print("Could not write to file " + imgPath)
+    except:
+        print("Could not write to image file %s" % imgPath)
     else:
         # call the composition function
         _compose(theme, dctPlotInfo)
@@ -280,6 +287,7 @@ def toScatter(
     imgPath,
     theme,
     colorMap,
+    texPath=None,
     xLim=[],
     yLim=[],
     zLim=[],
@@ -302,6 +310,9 @@ def toScatter(
         teX theme to be used
     colorMap : ColorMap
         colormap to be used
+    texPath=None : string
+        path to the imagefile where TeX will be able to find it.
+        if left at None, texPath=imgPath is assumed
     xLim=[] : list
         range if the x axis
     yLim=[] : list
@@ -341,6 +352,9 @@ def toScatter(
     if zLim == []:
         zLim = [np.min(arrData), np.max(arrData)]
 
+    if texPath is None:
+        texPath = imgPath
+
     dctPlotInfo = {
         'dataMin': np.min(arrData[:, 2]),
         'dataMax': np.max(arrData[:, 2]),
@@ -350,7 +364,8 @@ def toScatter(
         'yMin': yLim[0],
         'yMax': yLim[1],
         'yLabel': yLabel,
-        'imagePath': imgPath,
+        'savePath': imgPath,
+        'imagePath': texPath,
         'colormap': colorMap.toPGF()
     }
 
@@ -382,7 +397,7 @@ def toScatter(
             pad_inches=0
         )
     except IOError:
-        print("Could not write to file " + imgPath + '.png')
+        print("Could not write to image file " + imgPath + '.png')
     else:
         # call the composition function
         _compose(theme, dctPlotInfo)
