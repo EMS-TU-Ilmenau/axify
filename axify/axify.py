@@ -98,7 +98,7 @@ class ColorMap:
 
                     # extract the colorbar information from the workspace
                     self._name = ccbb.name
-                    self._cols = [col._tplDef for col in ccbb.colors]
+                    self._cols = [col.tplDef for col in ccbb.colors]
                     self._pos = [pos for pos in ccbb.positions]
 
                     # prepare the data to be registered as a matplotlib
