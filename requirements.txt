@@ -1,3 +1,4 @@
 numpy
+colorfy
 matplotlib
 numpydoc
