@@ -403,6 +403,41 @@ def toScatter(
         _compose(theme, dctPlotInfo)
 
 
+def generateHeader(
+    path
+):
+    """Generate TeX-File to be used as include for the axify dependencies
+
+    Parameters
+    ----------
+    path : string
+        path to save the file to
+
+    Examples
+    --------
+    >>> import axify as ax
+    >>> ax.generateHeader('axify')
+
+    This generates a file ``axify.tex`` containing the necessary
+    package includes for TeX.
+    """
+
+    depString = r"""% axify dependencies
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepgfplotslibrary{colormaps}
+    """
+
+    try:
+        # open the file
+        f = open(path + '.tex', 'w')
+    except IOError:
+        print("Could not write to TeX header to %s" % path)
+    else:
+        # write the tikz-snippet
+        f.write(depString)
+
+
 if __name__ == "__main__":
 
     plotFunctions = {
@@ -458,6 +493,14 @@ if __name__ == "__main__":
         type=str
     )
 
+    parser.add_argument(
+        '-d',
+        action='store',
+        help='Path to write a dependency TeX header to',
+        default='',
+        type=str
+    )
+
     args = parser.parse_args()
 
     # paths to the numpy files
@@ -490,6 +533,11 @@ if __name__ == "__main__":
                     args.c +
                     '.json'
                 )
+
+        # write a possibly requested header
+        depFile = args.d
+        if depFile != "":
+            generateHeader(args.d)
 
         # go through all images
         for imgPath in lstPaths:
