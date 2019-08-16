@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/axify/badge/?version=latest)](https://axify.readthedocs.io/en/latest/?badge=latest)
+
 # axify
 
 ## Introduction
