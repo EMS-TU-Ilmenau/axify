@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+
+# This file is part of axify.
+
+# axify is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# axify is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with axify.  If not, see <http://www.gnu.org/licenses/>.
+
+
+if __name__ == "__main__":
+
+    import argparse
+    import axify
+    
+    plotFunctions = {
+        'heatmap': toHeatmap,
+        'scatter': toScatter
+    }
+
+    # define and parse arguments
+    parser = argparse.ArgumentParser(
+        description=r"""Script to convert a large numpy array to a png
+    and also generate a tikzpicture, which plots the png with axes
+    to be included in a TeX document."""
+    )
+
+    parser.add_argument(
+        '-s',
+        action='store',
+        help='Plotting style to use. Currently supported ones: \n' +
+        'heatmap, scatter',
+        type=str,
+        default='heatmap'
+    )
+
+    parser.add_argument(
+        '-p',
+        action="store",
+        help='Path to the *.npy file(s) without the file extension',
+        nargs='+',
+        type=str
+    )
+
+    parser.add_argument(
+        '-m',
+        action="store",
+        help='Colormap for the plot; supports all maps of matplotlib',
+        default="jet",
+        type=str
+    )
+
+    parser.add_argument(
+        '-t',
+        action="store",
+        help='TeX template to use',
+        default="",
+        type=str
+    )
+
+    parser.add_argument(
+        '-c',
+        action='store',
+        help='Path to a JSON file containing a colorfy workspace',
+        default='',
+        type=str
+    )
+
+    parser.add_argument(
+        '-d',
+        action='store',
+        help='Path to write a dependency TeX header to',
+        default='',
+        type=str
+    )
+
+    args = parser.parse_args()
+
+    # paths to the numpy files
+    lstPaths = args.p
+
+    # name of the desired colormap
+    colorMapName = args.m
+
+    # desired theme-skeleton file
+    theme = Theme(args.t + '.tex')
+
+    # check if the functionality is implemented
+    try:
+        function = plotFunctions[args.s]
+    except KeyError:
+        print('Requested ' + args.s + ' functionality not implemented.')
+        raise(NotImplementedError)
+    else:
+        # set a maybe desired colorfy workspace
+        colorfyWS = args.c
+
+        if colorfyWS == "":
+            colorMap = ColorMap(colorMapName)
+        else:
+            try:
+                colorMap = ColorMap(colorMapName, colorfy=colorfyWS)
+            except (FileNotFoundError):
+                print(
+                    'Unable to load colorfy workspace from ' +
+                    args.c +
+                    '.json'
+                )
+
+        # write a possibly requested header
+        depFile = args.d
+        if depFile != "":
+            generateHeader(args.d)
+
+        # go through all images
+        for imgPath in lstPaths:
+            try:
+                open(imgPath + '.npy')
+                # load the numpy array and call the entry point
+                # function for it
+            except (FileNotFoundError):
+                print('File ' + imgPath + '.npy not found.')
+            else:
+                function(
+                    np.load(imgPath + '.npy'),
+                    imgPath,
+                    theme,
+                    colorMap=colorMap,
+                )
