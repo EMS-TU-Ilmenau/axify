@@ -19,8 +19,11 @@
 if __name__ == "__main__":
 
     import argparse
-    import axify
-    
+    from axify import *
+    #from colorfy import *
+    import colorfy
+    import numpy as np
+
     plotFunctions = {
         'heatmap': toHeatmap,
         'scatter': toScatter
